@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Tada Silver Mine VR Tour</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script>
+        // --- 設定データ：各地点の画像情報をここに集約 ---
+        const sceneData = {
+            p1: { main: "#img1", alt: "#img1_alt", next: "p2", prev: null },
+            p2: { main: "#img2", alt: "#img2_alt", next: "p3", prev: "p1" },
+            p3: { main: "#img3", alt: "#img3_alt", next: "p4", prev: "p2" },
+            p4: { main: "#img4", alt: "#img4_alt", next: "p5", prev: "p3" },
+            p5: { main: "#img5", alt: "#img5_alt", next: "p6", prev: "p4" },
+            p6: { main: "#img6", alt: "#img6_alt", next: "p7", prev: "p5" },
+            p7: { main: "#img7", alt: "#img7_alt", next: "p8", prev: "p6" },
+            p8: { main: "#img8", alt: "#img8_alt", next: "p9", prev: "p7" },
+            p9: { main: "#img9", alt: "#img9_alt", next: "p10", prev: "p8" },
+            p10: { main: "#img10", alt: "#img10_alt", next: "p11", prev: "p9" },
+            p11: { main: "#img11", alt: "#img11_alt", next: "p12", prev: "p10" },
+            p12: { main: "#img12", alt: "#img12_alt", next: "p13", prev: "p11" },
+            p13: { main: "#img13", alt: "#img13_alt", next: "p14", prev: "p12" },
+            p14: { main: "#img14", alt: "#img14_alt", next: "p15", prev: "p13" },
+            p15: { main: "#img15", alt: "#img15_alt", next: "p16", prev: "p14" },
+            p16: { main: "#img16", alt: "#img16_alt", next: "p17", prev: "p15" },
+            p17: { main: "#img17", alt: "#img17_alt", next: "p18", prev: "p16" },
+            p18: { main: "#img18", alt: "#img18_alt", next: "p1", prev: "p17" },
+            // ... p18まで同様に記述
+        };
+
+        // --- シーン切り替え関数 ---
+        function goToScene(sceneId) {
+    const data = sceneData[sceneId];
+    if (!data) return;
+
+    // 1. 空の画像を更新
+    document.querySelector('#main-bg').setAttribute('src', data.main);
+
+    // 2. 切り替えボタンのターゲット画像を更新（ここが重要）
+    // photo-toggleコンポーネントに新しい画像リストを渡す
+    const toggleBtn = document.querySelector('#toggle-btn');
+    toggleBtn.setAttribute('photo-toggle', {
+        target: '#main-bg',
+        images: [data.main, data.alt] 
+    });
+
+    // 3. 次へ・前へボタンのリンク先と表示を更新
+    updateButton('#btn-next', data.next);
+    updateButton('#btn-prev', data.prev);
+}
+
+// ボタンの表示・非表示とクリックイベントを制御する補助関数
+function updateButton(selector, nextId) {
+    const btn = document.querySelector(selector);
+    if (nextId) {
+        btn.setAttribute('visible', 'true');
+        btn.onclick = () => goToScene(nextId);
+    } else {
+        btn.setAttribute('visible', 'false');
+    }
+}
+
+        // --- 既存の photo-toggle コンポーネント ---
+        AFRAME.registerComponent('photo-toggle', {
+            schema: {
+                target: {type: 'selector'},
+                images: {type: 'array'}
+            },
+            init: function () {
+                let data = this.data;
+                let index = 0;
+                this.el.addEventListener('click', () => {
+                    index = (index + 1) % data.images.length;
+                    data.target.setAttribute('src', data.images[index]);
+                });
+            },
+            // シーン移動時に画像を更新できるように update を追加
+            update: function () {
+                this.index = 0; 
+            }
+        });
+    </script>
+</head>
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="img1" src="01.jpg"crossorigin="anonymous">
+            <img id="img1_alt" src="1.jpg"crossorigin="anonymous">
+            <img id="img2" src="02.jpg"crossorigin="anonymous">
+            <img id="img2_alt" src="2.jpg"crossorigin="anonymous">
+            <img id="img3" src="03.jpg"crossorigin="anonymous">
+            <img id="img3_alt" src="3.jpg"crossorigin="anonymous">
+            <img id="img4" src="04.jpg"crossorigin="anonymous">
+            <img id="img4_alt" src="4.jpg"crossorigin="anonymous">
+            <img id="img5" src="05.jpg"crossorigin="anonymous">
+            <img id="img5_alt" src="5.jpg"crossorigin="anonymous">
+            <img id="img6" src="06.jpg"crossorigin="anonymous">
+            <img id="img6_alt" src="6.jpg"crossorigin="anonymous">
+            <img id="img7" src="07.jpg"crossorigin="anonymous">
+            <img id="img7_alt" src="7.jpg"crossorigin="anonymous">
+            <img id="img8" src="08.jpg"crossorigin="anonymous">
+            <img id="img8_alt" src="8.jpg"crossorigin="anonymous">
+            <img id="img9" src="09.jpg"crossorigin="anonymous">
+            <img id="img9_alt" src="9.jpg"crossorigin="anonymous">
+            <img id="img10" src="010.jpg"crossorigin="anonymous">
+            <img id="img10_alt" src="10.jpg"crossorigin="anonymous">
+            <img id="img11" src="011.jpg"crossorigin="anonymous">
+            <img id="img11_alt" src="11.jpg"crossorigin="anonymous">
+            <img id="img12" src="012.jpg"crossorigin="anonymous">
+            <img id="img12_alt" src="12.jpg"crossorigin="anonymous">
+            <img id="img13" src="013.jpg"crossorigin="anonymous">
+            <img id="img13_alt" src="13.jpg"crossorigin="anonymous">
+            <img id="img14" src="014.jpg"crossorigin="anonymous">
+            <img id="img14_alt" src="14.jpg"crossorigin="anonymous">
+            <img id="img15" src="015.jpg"crossorigin="anonymous">
+            <img id="img15_alt" src="15.jpg"crossorigin="anonymous">
+            <img id="img16" src="016.jpg"crossorigin="anonymous">
+            <img id="img16_alt" src="16.jpg"crossorigin="anonymous">
+            <img id="img17" src="017.jpg"crossorigin="anonymous">
+            <img id="img17_alt" src="17.jpg"crossorigin="anonymous">
+            <img id="img18" src="018.jpg"crossorigin="anonymous">
+            <img id="img18_alt" src="18.jpg"crossorigin="anonymous">
+            <img id="icon-toggle" src="toggle_icon.png"crossorigin="anonymous">
+            <img id="thumb-next" src="next_arrow.png"crossorigin="anonymous">
+            <img id="thumb-prev" src="prev_arrow.png"crossorigin="anonymous">
+        </a-assets>
+
+        <a-sky id="main-bg" src="#img1"></a-sky>
+
+        <a-image id="toggle-btn" 
+                 src="#icon-toggle" 
+                 position="0 1.5 -5" 
+                 photo-toggle="target: #main-bg; images: #img1, #img1_alt"
+                 look-at="[camera]">
+        </a-image>
+
+        <a-image id="btn-next" 
+                 src="#thumb-next" 
+                 position="3 1.5 -4" 
+                 onclick="goToScene('p2')"
+                 look-at="[camera]">
+        </a-image>
+
+        <a-image id="btn-prev" 
+                 src="#thumb-prev" 
+                 position="-3 1.5 -4" 
+                 visible="false"
+                 look-at="[camera]">
+        </a-image>
+
+        <a-camera>
+            <a-cursor fuse="true" color="#FF0000"></a-cursor>
+        </a-camera>
+    </a-scene>
+</body>
+</html>
