@@ -158,66 +158,62 @@
         };
 
         // --- シーン切り替え関数 ---
-        function goToScene(sceneId) {
-    const data = sceneData[sceneId];
-    if (!data) return;
+       function goToScene(sceneId) {
+            const data = sceneData[sceneId];
+            if (!data) return;
 
-    document.querySelector('#main-bg').setAttribute('src', data.main);
+            // 1. 背景画像を更新
+            document.querySelector('#main-bg').setAttribute('src', data.main);
 
-    const toggleBtn = document.querySelector('#toggle-btn');
-    toggleBtn.setAttribute('photo-toggle', {
-        target: '#main-bg',
-        images: [data.main, data.alt] 
-    });
-    
-    // 切り替えボタンの位置と「回転」を更新
-    toggleBtn.setAttribute('position', data.togglePos);
-    if (data.toggleRot) toggleBtn.setAttribute('rotation', data.toggleRot);
+            // 2. 切り替えボタンの画像リストと位置・回転を更新
+            const toggleBtn = document.querySelector('#toggle-btn');
+            // コンポーネントへのデータ渡しを文字列形式に修正（エラー防止）
+            toggleBtn.setAttribute('photo-toggle', `target: #main-bg; images: ${data.main}, ${data.alt}`);
+            toggleBtn.setAttribute('position', data.togglePos);
+            if (data.toggleRot) toggleBtn.setAttribute('rotation', data.toggleRot);
 
-    // 次へ・前へボタンを更新（引数に回転データを追加）
-    updateButton('#btn-next', data.next, data.nextPos, data.nextRot);
-    updateButton('#btn-prev', data.prev, data.prevPos, data.prevRot);
-}
-
-// 引数に rot を追加
-function updateButton(selector, nextId, pos, rot) {
-    const btn = document.querySelector(selector);
-    if (nextId && pos) {
-        btn.setAttribute('visible', 'true');
-        btn.setAttribute('position', pos);
-        
-        // ★追加：回転データがあれば反映させる
-        if (rot) {
-            btn.setAttribute('rotation', rot);
+            // 3. 次へ・前へボタンの位置・回転を更新
+            updateButton('#btn-next', data.next, data.nextPos, data.nextRot);
+            updateButton('#btn-prev', data.prev, data.prevPos, data.prevRot);
         }
-        
-        btn.onclick = () => goToScene(nextId);
-    } else {
-        btn.setAttribute('visible', 'false');
-    }
-}
 
-        // --- 既存の photo-toggle コンポーネント ---
+        // ボタンの表示・位置・イベントを一括更新する関数
+        function updateButton(selector, targetId, pos, rot) {
+            const btn = document.querySelector(selector);
+            if (targetId && pos) {
+                btn.setAttribute('visible', 'true');
+                btn.setAttribute('position', pos);
+                if (rot) btn.setAttribute('rotation', rot);
+                btn.onclick = () => goToScene(targetId);
+            } else {
+                btn.setAttribute('visible', 'false');
+            }
+        }
+
+        // --- 画像切り替えコンポーネント（修正版） ---
         AFRAME.registerComponent('photo-toggle', {
             schema: {
                 target: {type: 'selector'},
                 images: {type: 'array'}
             },
             init: function () {
-                let data = this.data;
-                let index = 0;
+                this.index = 0;
                 this.el.addEventListener('click', () => {
-                    index = (index + 1) % data.images.length;
-                    data.target.setAttribute('src', data.images[index]);
+                    // クリック時に最新の data.images を参照するように修正
+                    const images = this.data.images;
+                    if (!images || images.length < 2) return;
+                    this.index = (this.index + 1) % images.length;
+                    this.data.target.setAttribute('src', images[this.index]);
                 });
             },
-            // シーン移動時に画像を更新できるように update を追加
             update: function () {
-                this.index = 0; 
+                this.index = 0; // シーン移動時にリセット
             }
         });
+
+        // ページ読み込み時に最初のシーンを実行
         window.onload = () => {
-          goToScene('p1');
+            goToScene('p1');
         };
     </script>
 </head>
