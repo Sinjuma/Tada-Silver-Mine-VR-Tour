@@ -160,62 +160,61 @@
 
         // --- シーン切り替え関数 ---
        function goToScene(sceneId) {
-    const data = sceneData[sceneId];
-    if (!data) return;
+            const data = sceneData[sceneId];
+            if (!data) return;
 
-    // ★修正ポイント1：現在のモード(isAltMode)に合わせて背景画像を決定する
-    const targetImg = isAltMode ? data.alt : data.main;
-    document.querySelector('#main-bg').setAttribute('src', targetImg);
+            // ★変更点1: 現在のモード(isAltMode)に基づいて、表示する画像を決定する
+            const targetImg = isAltMode ? data.alt : data.main;
+            document.querySelector('#main-bg').setAttribute('src', targetImg);
 
-    // 切り替えボタンの更新
-    const toggleBtn = document.querySelector('#toggle-btn');
-    toggleBtn.setAttribute('photo-toggle', `target: #main-bg; images: ${data.main}, ${data.alt}`);
-    toggleBtn.setAttribute('position', data.togglePos);
-    if (data.toggleRot) toggleBtn.setAttribute('rotation', data.toggleRot);
+            // 切り替えボタン（復元/実写）の更新
+            const toggleBtn = document.querySelector('#toggle-btn');
+            toggleBtn.setAttribute('photo-toggle', `target: #main-bg; images: ${data.main}, ${data.alt}`);
+            toggleBtn.setAttribute('position', data.togglePos);
+            if (data.toggleRot) toggleBtn.setAttribute('rotation', data.toggleRot);
 
-    // 移動ボタンの更新
-    updateButton('#btn-next', data.next, data.nextPos, data.nextRot);
-    updateButton('#btn-prev', data.prev, data.prevPos, data.prevRot);
-}
+            // 移動ボタンの更新
+            updateButton('#btn-next', data.next, data.nextPos, data.nextRot);
+            updateButton('#btn-prev', data.prev, data.prevPos, data.prevRot);
+        }
 
-function updateButton(selector, targetId, pos, rot) {
-    const btn = document.querySelector(selector);
-    if (targetId && pos) {
-        btn.setAttribute('visible', 'true');
-        btn.setAttribute('position', pos);
-        if (rot) btn.setAttribute('rotation', rot);
-        btn.onclick = () => goToScene(targetId);
-    } else {
-        btn.setAttribute('visible', 'false');
-    }
-}
+        function updateButton(selector, targetId, pos, rot) {
+            const btn = document.querySelector(selector);
+            if (targetId && pos) {
+                btn.setAttribute('visible', 'true');
+                btn.setAttribute('position', pos);
+                if (rot) btn.setAttribute('rotation', rot);
+                btn.onclick = () => goToScene(targetId);
+            } else {
+                btn.setAttribute('visible', 'false');
+            }
+        }
 
-// --- 画像切り替えコンポーネント（修正版） ---
-AFRAME.registerComponent('photo-toggle', {
-    schema: {
-        target: {type: 'selector'},
-        images: {type: 'array'}
-    },
-    init: function () {
-        this.el.addEventListener('click', () => {
-            const images = this.data.images;
-            if (!images || images.length < 2) return;
+        // --- 画像切り替えコンポーネント ---
+        AFRAME.registerComponent('photo-toggle', {
+            schema: {
+                target: {type: 'selector'},
+                images: {type: 'array'}
+            },
+            init: function () {
+                this.el.addEventListener('click', () => {
+                    const images = this.data.images;
+                    if (!images || images.length < 2) return;
 
-            // ★修正ポイント2：クリック時にグローバル変数を反転させる
-            isAltMode = !isAltMode;
-            
-            // 現在のモードに合わせて画像を表示
-            this.data.target.setAttribute('src', isAltMode ? images[1] : images[0]);
+                    // ★変更点2: クリックされたらモードを反転させる
+                    isAltMode = !isAltMode;
+                    
+                    // スイッチの状態に合わせて背景を切り替える
+                    this.data.target.setAttribute('src', isAltMode ? images[1] : images[0]);
+                });
+            },
+            // updateでのリセット処理を削除しました
+            update: function () {} 
         });
-    },
-    update: function () {
-        // シーン移動時のリセット処理は不要になったため削除
-    }
-});
 
-window.onload = () => {
-    goToScene('p1');
-};
+        window.onload = () => {
+            goToScene('p1');
+        };
     </script>
 </head>
 <body>
