@@ -263,23 +263,26 @@
 
         <a-sky id="main-bg" src="#img1"></a-sky>
 
-        <a-entity id="toggle-group">
-            <a-ring color="#FFFFFF" radius-inner="0.45" radius-outer="0.55" 
-                    material="shader: flat; opacity: 0.6; transparent: true" position="0 0 -0.02"></a-ring>
-            <a-image id="toggle-btn" src="#icon-toggle" width="0.8" height="0.8"></a-image>
-        </a-entity>
+        <a-image id="toggle-btn" 
+                 src="#icon-toggle" 
+                 
+                 photo-toggle="target: #main-bg; images: #img1, #img1_alt"
+                 >
+        </a-image>
 
-        <a-entity id="next-group">
-            <a-ring color="#00FFFF" radius-inner="0.45" radius-outer="0.55" 
-                    material="shader: flat; opacity: 0.8; transparent: true" position="0 0 -0.02"></a-ring>
-            <a-image id="btn-next" src="#thumb-next" width="0.8" height="0.8"></a-image>
-        </a-entity>
+        <a-image id="btn-next" 
+                 src="#thumb-next" 
+                 
+                 onclick="goToScene('p2')"
+                 >
+        </a-image>
 
-        <a-entity id="prev-group" visible="false">
-            <a-ring color="#CCCCCC" radius-inner="0.45" radius-outer="0.55" 
-                    material="shader: flat; opacity: 0.8; transparent: true" position="0 0 -0.02"></a-ring>
-            <a-image id="btn-prev" src="#thumb-prev" width="0.8" height="0.8"></a-image>
-        </a-entity>
+        <a-image id="btn-prev" 
+                 src="#thumb-prev" 
+                  
+                 visible="false"
+                 >
+        </a-image>
 
         <a-camera>
             <a-cursor fuse="true" color="#FF0000"></a-cursor>
