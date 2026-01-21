@@ -9,7 +9,12 @@
     <script>
         // --- 設定データ：各地点の画像情報をここに集約 ---
         const sceneData = {
-            p1: { main: "#img1", alt: "#img1_alt", next: "p2", prev: null },
+            p1: { 
+                main: "#img1", alt: "#img1_alt", next: "p2", prev: null ,
+            nextPos: "5 1.5 -5",   
+            prevPos: "0 0 0",      
+            togglePos: "0 1.5 -5"
+            },
             p2: { main: "#img2", alt: "#img2_alt", next: "p3", prev: "p1" },
             p3: { main: "#img3", alt: "#img3_alt", next: "p4", prev: "p2" },
             p4: { main: "#img4", alt: "#img4_alt", next: "p5", prev: "p3" },
