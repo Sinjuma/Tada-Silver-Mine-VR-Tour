@@ -265,28 +265,32 @@
 
         <a-image id="toggle-btn" 
                  src="#icon-toggle" 
-                 
+                 look-at="#camera"
                  photo-toggle="target: #main-bg; images: #img1, #img1_alt"
                  >
         </a-image>
 
         <a-image id="btn-next" 
                  src="#thumb-next" 
-                 
+                 look-at="#camera"
                  onclick="goToScene('p2')"
                  >
         </a-image>
 
         <a-image id="btn-prev" 
                  src="#thumb-prev" 
-                  
+                 look-at="#camera"
                  visible="false"
                  >
         </a-image>
-
-        <a-camera>
-            <a-cursor fuse="true" color="#FF0000"></a-cursor>
-        </a-camera>
+        
+        <a-entity id="cameraRig">
+            <a-camera id="camera">
+                <a-cursor fuse="false" raycaster="objects: a-image"></a-cursor>
+            </a-camera>
+            <a-entity laser-controls="hand: right" raycaster="objects: a-image; far: 30"></a-entity>
+            <a-entity laser-controls="hand: left" raycaster="objects: a-entity, a-image; far: 30"></a-entity>
+        </a-entity>
     </a-scene>
 </body>
 </html>
